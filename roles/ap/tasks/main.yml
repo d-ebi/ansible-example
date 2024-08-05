@@ -3,7 +3,7 @@
 - name: Deploy xsystem.service
   ansible.builtin.template:
     src: x.service.j2
-    dest: "/usr/lib/systemd/system/{{ item.name }}.service"
+    dest: "/etc/systemd/system/{{ item.name }}.service"
     mode: '0644'
   loop: "{{ ap_stubs }}"
 
