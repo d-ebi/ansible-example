@@ -1,0 +1,34 @@
+---
+- name: Install nginx for web server
+  hosts: a_web, b_web, c_web, d_web
+  order: inventory
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Prepare
+      ansible.builtin.include_role:
+        name: nginx
+        tasks_from: prepare.yml
+
+    - name: Install
+      ansible.builtin.include_role:
+        name: nginx
+        tasks_from: install.yml
+
+    - name: Configure
+      ansible.builtin.include_role:
+        name: nginx
+        tasks_from: configure.yml
+
+    - name: Start
+      ansible.builtin.include_role:
+        name: nginx
+        tasks_from: start.yml
+
+- name: Install stub for ap server
+  hosts: a_ap, b_ap, c_ap, d_ap
+  order: inventory
+  vars_files:
+    - vars/main.yml
+  roles:
+    - ap

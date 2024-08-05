@@ -1,0 +1,15 @@
+[Unit]
+Description=This is stub of {{ item.name }} system.
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -m http.server {{ item.port }} --bind 0.0.0.0 -d /usr/local/stub/{{ item.name }}
+ExecReload=/bin/kill -s HUP $MAINPID
+KillSignal=SIGQUIT
+TimeoutStopSec=5
+KillMode=control-group
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

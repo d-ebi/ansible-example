@@ -1,0 +1,6 @@
+---
+nginx_vars:
+  version: 1.26.1
+  install_dir: /usr/local/nginx
+  log_dir: /var/log/nginx
+  pid_path: /run/nginx.pid

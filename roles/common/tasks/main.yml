@@ -1,0 +1,17 @@
+---
+- name: Install commons
+  ansible.builtin.dnf:
+    name:
+      - git
+      - less
+      - tar
+      - traceroute
+      - vim
+      - wget
+    state: present
+
+- name: Deploy vimrc
+  ansible.builtin.copy:
+    src: files/.vimrc
+    dest: /root
+    mode: '0644'

@@ -1,0 +1,42 @@
+---
+- name: Install config config-manager
+  ansible.builtin.dnf:
+    name: dnf-command(config-manager)
+    state: present
+
+- name: Enable powertools
+  ansible.builtin.command:
+    cmd: dnf config-manager --set-enabled powertools
+  register: powertools
+  changed_when: powertools.rc != 0
+
+- name: Install Epel
+  ansible.builtin.dnf:
+    name: epel-release
+    state: present
+
+- name: Create nginx group
+  ansible.builtin.group:
+    name: nginx
+    state: present
+
+- name: Create nginx user
+  ansible.builtin.user:
+    name: nginx
+    shell: /sbin/nologin
+    state: present
+
+- name: Install requires
+  ansible.builtin.dnf:
+    name:
+      - gcc
+      - gd-devel
+      - GeoIP-devel
+      - gperftools-devel
+      - libxslt-devel
+      - make
+      - openssl-devel
+      - pcre-devel
+      - perl-ExtUtils-Embed
+      - zlib-devel
+    state: present

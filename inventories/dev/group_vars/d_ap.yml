@@ -1,0 +1,6 @@
+---
+ap_stubs:
+  - name: c
+    port: 8092
+  - name: d
+    port: 8093

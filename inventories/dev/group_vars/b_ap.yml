@@ -1,0 +1,10 @@
+---
+ap_stubs:
+  - name: a
+    port: 8090
+  - name: b
+    port: 8091
+  - name: c
+    port: 8092
+  - name: d
+    port: 8093
