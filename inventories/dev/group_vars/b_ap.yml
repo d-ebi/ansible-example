@@ -1,10 +1,10 @@
 ---
 ap_stubs:
-  - name: a
+  - name: aqua
     port: 8090
-  - name: b
+  - name: beta
     port: 8091
-  - name: c
+  - name: charlie
     port: 8092
-  - name: d
+  - name: delta
     port: 8093

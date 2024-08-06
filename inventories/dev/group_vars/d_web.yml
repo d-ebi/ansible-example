@@ -1,0 +1,8 @@
+---
+reverse_proxy_settings:
+  - name: charlie
+    ip_address: 127.0.0.1
+    port: 8092
+  - name: delta
+    ip_address: 127.0.0.1
+    port: 8093

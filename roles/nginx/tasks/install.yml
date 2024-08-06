@@ -100,6 +100,12 @@
         mode: '0755'
         state: directory
 
+    - name: Create maintenance.d
+      ansible.builtin.file:
+        path: "{{ nginx_vars.install_dir }}-{{ nginx_vars.version }}/maintenance.d"
+        mode: '0755'
+        state: directory
+
 - name: Check symlink
   ansible.builtin.stat:
     path: "{{ nginx_vars.install_dir }}"

@@ -34,17 +34,75 @@ http {
     # See http://nginx.org/en/docs/ngx_core_module.html#include
     # for more information.
 
+    geo $access_from {
+        include /usr/local/nginx/conf.d/geo.conf;
+    }
+
+{% for item in reverse_proxy_settings %}
+    #--------------------------------------------------------------------------
+    # upstream for {{ item.name }}
+    #--------------------------------------------------------------------------
+    upstream {{ item.name }} {
+        server {{ item.ip_address }}:{{ item.port }};
+    }
+
+{% endfor %}
+
     server {
-        listen       80 default_server;
+        listen       80      default_server;
         listen       [::]:80 default_server;
         server_name  _;
         root         {{ nginx_vars.install_dir }}/html;
 
-        # Load configuration files for the default server block.
-        include {{ nginx_vars.install_dir }}/conf/*.conf;
-
-        location / {
+{% for item in reverse_proxy_settings %}
+        #----------------------------------------------------------------------
+        # maintenance for {{ item.name }}
+        #----------------------------------------------------------------------
+        set $maintenance_for_{{ item.name }} false;
+        if (-e {{ nginx_vars.install_dir }}/maintenance.d/{{ item.name }}) {
+            set $maintenance_for_{{ item.name }} true;
         }
+        if ($access_from !~ external) {
+            set $maintenance_for_{{ item.name }} false;
+        }
+
+{% endfor %}
+
+        # Load configuration files for the default server block.
+        # include {{ nginx_vars.install_dir }}/conf/*.conf;
+
+{% for item in reverse_proxy_settings %}
+        #----------------------------------------------------------------------
+        # location for {{ item.name }}
+        #----------------------------------------------------------------------
+        location ~ ^/{{ item.name }}$ {
+            if ($maintenance_for_{{ item.name }} = true) {
+                error_page 503 /maintenance.html;
+                return 503;
+            }
+            rewrite ^/(.*)$ /$1 break;
+            proxy_pass http://{{ item.name }};
+
+            add_header Cache-Control no-cache;
+            sendfile off;
+            etag off;
+            if_modified_since off;
+        }
+        location ~ ^/{{ item.name }}/.*$ {
+            if ($maintenance_for_{{ item.name }} = true) {
+                error_page 503 /maintenance.html;
+                return 503;
+            }
+            rewrite ^/(.*)$ /$1 break;
+            proxy_pass http://{{ item.name }};
+
+            add_header Cache-Control no-cache;
+            sendfile off;
+            etag off;
+            if_modified_since off;
+        }
+
+{% endfor %}
 
         error_page 404 /404.html;
             location = /40x.html {
@@ -54,35 +112,4 @@ http {
             location = /50x.html {
         }
     }
-
-# Settings for a TLS enabled server.
-#
-#    server {
-#        listen       443 ssl http2 default_server;
-#        listen       [::]:443 ssl http2 default_server;
-#        server_name  _;
-#        root         {{ nginx_vars.install_dir }}/html;
-#
-#        ssl_certificate "/etc/pki/nginx/server.crt";
-#        ssl_certificate_key "/etc/pki/nginx/private/server.key";
-#        ssl_session_cache shared:SSL:1m;
-#        ssl_session_timeout  10m;
-#        ssl_ciphers PROFILE=SYSTEM;
-#        ssl_prefer_server_ciphers on;
-#
-#        # Load configuration files for the default server block.
-#        include {{ nginx_vars.install_dir }}/conf/*.conf;
-#
-#        location / {
-#        }
-#
-#        error_page 404 /404.html;
-#            location = /40x.html {
-#        }
-#
-#        error_page 500 502 503 504 /50x.html;
-#            location = /50x.html {
-#        }
-#    }
-
 }

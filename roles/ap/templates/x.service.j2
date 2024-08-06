@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 -m http.server {{ item.port }} --bind 0.0.0.0 -d /usr/local/stub/{{ item.name }}
+ExecStart=/usr/bin/python3 -m http.server {{ item.port }} --bind 0.0.0.0 -d /usr/local/stub/stub_{{ item.name }}
 ExecReload=/bin/kill -s HUP $MAINPID
 KillSignal=SIGQUIT
 TimeoutStopSec=5

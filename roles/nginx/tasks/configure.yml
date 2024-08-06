@@ -5,3 +5,17 @@
     dest: "{{ nginx_vars.install_dir }}/conf/nginx.conf"
     mode: '0644'
     force: true
+
+- name: Deploy geo.conf
+  ansible.builtin.template:
+    src: geo.conf.j2
+    dest: "{{ nginx_vars.install_dir }}/conf.d/geo.conf"
+    mode: '0644'
+    force: true
+
+- name: Deploy maintenance.html
+  ansible.builtin.copy:
+    src: files/maintenance.html
+    dest: "{{ nginx_vars.install_dir }}/html"
+    mode: '0644'
+    force: true

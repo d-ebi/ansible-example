@@ -30,5 +30,8 @@
   order: inventory
   vars_files:
     - vars/main.yml
-  roles:
-    - ap
+  tasks:
+    - name: Install stub
+      ansible.builtin.include_role:
+        name: ap
+        tasks_from: install.yml

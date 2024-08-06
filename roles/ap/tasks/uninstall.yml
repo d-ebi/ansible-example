@@ -1,0 +1,23 @@
+---
+# TODO: これはすべてスタブです。
+- name: Stop stub servers
+  ansible.builtin.systemd:
+    name: "stub_{{ item.name }}.service"
+    state: stopped
+    enabled: false
+  loop: "{{ ap_stubs }}"
+
+- name: Remove xsystem.service
+  ansible.builtin.file:
+    path: "/etc/systemd/system/stub_{{ item.name }}.service"
+    state: absent
+  loop: "{{ ap_stubs }}"
+
+- name: Remove html dir
+  ansible.builtin.file:
+    path: "/usr/local/stub"
+    state: absent
+
+- name: Daemon reload
+  ansible.builtin.systemd_service:
+    daemon_reload: true

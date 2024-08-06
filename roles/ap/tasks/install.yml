@@ -3,13 +3,13 @@
 - name: Deploy xsystem.service
   ansible.builtin.template:
     src: x.service.j2
-    dest: "/etc/systemd/system/{{ item.name }}.service"
+    dest: "/etc/systemd/system/stub_{{ item.name }}.service"
     mode: '0644'
   loop: "{{ ap_stubs }}"
 
 - name: Create html dir
   ansible.builtin.file:
-    path: "/usr/local/stub/{{ item.name }}"
+    path: "/usr/local/stub/stub_{{ item.name }}/{{ item.name }}"
     state: directory
     mode: '0755'
   loop: "{{ ap_stubs }}"
@@ -17,7 +17,7 @@
 - name: Deploy html
   ansible.builtin.template:
     src: index.html.j2
-    dest: "/usr/local/stub/{{ item.name }}/index.html"
+    dest: "/usr/local/stub/stub_{{ item.name }}/{{ item.name }}/index.html"
     mode: '0644'
   loop: "{{ ap_stubs }}"
 
@@ -27,6 +27,7 @@
 
 - name: Start stub servers
   ansible.builtin.systemd:
-    name: "{{ item.name }}.service"
+    name: "stub_{{ item.name }}.service"
     state: started
+    enabled: true
   loop: "{{ ap_stubs }}"

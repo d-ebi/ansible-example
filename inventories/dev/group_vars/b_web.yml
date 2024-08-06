@@ -1,0 +1,14 @@
+---
+reverse_proxy_settings:
+  - name: aqua
+    ip_address: 127.0.0.1
+    port: 8090
+  - name: beta
+    ip_address: 127.0.0.1
+    port: 8091
+  - name: charlie
+    ip_address: 127.0.0.1
+    port: 8092
+  - name: delta
+    ip_address: 127.0.0.1
+    port: 8093
