@@ -1,0 +1,11 @@
+---
+- name: Update configuration
+  hosts: a_web, b_web, c_web, d_web
+  order: inventory
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Update nginx configurations
+      ansible.builtin.include_role:
+        name: nginx
+        tasks_from: update_configurations.yml

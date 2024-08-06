@@ -1,5 +1,5 @@
 ---
-- name: Start nginx
+- name: Stop nginx
   ansible.builtin.systemd:
     name: nginx
     state: stopped
